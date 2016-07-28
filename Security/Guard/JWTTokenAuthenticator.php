@@ -9,7 +9,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTAuthenticationException;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailure\JWTDecodeFailureException;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\BeforeAuthToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
@@ -141,7 +141,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     public function onAuthenticationFailure(Request $request, AuthenticationException $authException, JWTFailureEventInterface $event = null)
     {
         if (null === $event) {
-            $event = new JWTInvalidEvent($request, $authException, new JWTAuthenticationFailureResponse($authException->getMessage()));
+            $event = new JWTInvalidEvent($authException, new JWTAuthenticationFailureResponse($authException->getMessage()));
             $this->dispatcher->dispatch(Events::JWT_INVALID, $event);
         }
 
@@ -164,7 +164,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $authException = JWTAuthenticationException::tokenNotFound();
-        $event         = new JWTNotFoundEvent($request, $authException, new JWTAuthenticationFailureResponse($authException->getMessage()));
+        $event         = new JWTNotFoundEvent($authException, new JWTAuthenticationFailureResponse($authException->getMessage()));
 
         $this->dispatcher->dispatch(Events::JWT_NOT_FOUND, $event);
 

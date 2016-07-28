@@ -163,7 +163,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
             ->method('dispatch')
             ->with(
                 Events::JWT_INVALID,
-                new JWTInvalidEvent($request, $authException, $expectedResponse)
+                new JWTInvalidEvent($authException, $expectedResponse)
             );
 
         $authenticator = new JWTTokenAuthenticator(
@@ -173,7 +173,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
             'username'
         );
 
-        $response = $authenticator->onAuthenticationFailure($request, $authException);
+        $response = $authenticator->onAuthenticationFailure($this->getRequestMock(), $authException);
 
         $this->assertEquals($expectedResponse, $response);
         $this->assertSame($expectedResponse->getMessage(), $response->getMessage());
@@ -181,10 +181,9 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
     public function testOnAuthenticationFailureWithJWTNotFoundEventArg()
     {
-        $request          = $this->getRequestMock();
         $authException    = JWTAuthenticationException::tokenNotFound();
         $failureResponse  = new JWTAuthenticationFailureResponse($authException->getMessage());
-        $event            = new JWTNotFoundEvent($request, $authException, $failureResponse);
+        $event            = new JWTNotFoundEvent($authException, $failureResponse);
 
         $authenticator = new JWTTokenAuthenticator(
             $this->getJWTManagerMock(),
@@ -193,7 +192,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
             'username'
         );
 
-        $response = $authenticator->onAuthenticationFailure($request, $authException, $event);
+        $response = $authenticator->onAuthenticationFailure($this->getRequestMock(), $authException, $event);
 
         $this->assertEquals($failureResponse, $response);
         $this->assertSame($failureResponse->getMessage(), $response->getMessage());
@@ -201,9 +200,8 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
     public function testStart()
     {
-        $request          = $this->getRequestMock();
-        $authException    = JWTAuthenticationException::tokenNotFound();
-        $failureResponse  = new JWTAuthenticationFailureResponse($authException->getMessage());
+        $authException   = JWTAuthenticationException::tokenNotFound();
+        $failureResponse = new JWTAuthenticationFailureResponse($authException->getMessage());
 
         $dispatcher = $this->getEventDispatcherMock();
         $dispatcher
@@ -211,7 +209,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
             ->method('dispatch')
             ->with(
                 Events::JWT_NOT_FOUND,
-                new JWTNotFoundEvent($request, $authException, $failureResponse)
+                new JWTNotFoundEvent($authException, $failureResponse)
             );
 
         $authenticator = new JWTTokenAuthenticator(
@@ -221,7 +219,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
             'username'
         );
 
-        $response = $authenticator->start($request, $authException);
+        $response = $authenticator->start($this->getRequestMock(), $authException);
 
         $this->assertEquals($failureResponse, $response);
         $this->assertSame($failureResponse->getMessage(), $response->getMessage());

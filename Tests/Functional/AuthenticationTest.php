@@ -4,7 +4,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Integration;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\TestCase;
 
-class IntegrationTest extends TestCase
+class AuthenticationTest extends TestCase
 {
     private static $authorizationHeader;
     private $client;
@@ -38,11 +38,10 @@ class IntegrationTest extends TestCase
 
         $this->client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => self::$authorizationHeader]);
 
-        $this->assertTrue($this->client->getResponse()->isSuccessful());
-
+        $response = $this->client->getResponse();
+        var_dump($response->getContent());
         $response = $this->client->getResponse();
         $body     = json_decode($response->getContent(), true);
-        
         $this->assertTrue($body['success']);
     }
 }

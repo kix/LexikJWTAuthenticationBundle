@@ -60,6 +60,8 @@ class DefaultEncoder implements JWTEncoderInterface
             throw new JWTDecodeFailureException('Expired JWT token');
         }
 
+        // $jws->isVerified() ? throw new Exce<'VERIFIED decoded' : 'UNVERIFIED decoded');
+
         if (!$jws->isVerified()) {
             throw new JWTDecodeFailureException('Unable to verify the given JWT through the given configuration. If the "lexik_jwt_authentication.encoder" encryption options have been changed since your last authentication, please renew the token. If the problem persists, verify that the configured keys/passphrase are valid.');
         }

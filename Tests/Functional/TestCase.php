@@ -2,7 +2,6 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Integration\AppKernel;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -16,6 +15,8 @@ abstract class TestCase extends WebTestCase
      */
     protected static function createKernel(array $options = [])
     {
+        require_once __DIR__.'/app/AppKernel.php';
+
         return new AppKernel('test', true);
     }
 
