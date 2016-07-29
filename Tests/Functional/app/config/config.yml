@@ -3,7 +3,8 @@ framework:
     router:
         resource: '%kernel.root_dir%/config/routing.yml'
     test: ~
-    session: ~
+    session:
+        storage_id: session.storage.mock_file
 
 lexik_jwt_authentication:
     private_key_path:   '%kernel.root_dir%/../var/jwt/private.pem'

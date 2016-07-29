@@ -3,13 +3,13 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class TestController extends Controller
 {
     public function securedAction()
     {
-        return new JsonResponse(['success' => true]);
+        return new Response();
     }
 
     public function loginCheckAction()

@@ -10,6 +10,8 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 abstract class TestCase extends WebTestCase
 {
+    protected static $client;
+
     /**
      * {@inheritdoc}
      */
@@ -17,7 +19,32 @@ abstract class TestCase extends WebTestCase
     {
         require_once __DIR__.'/app/AppKernel.php';
 
-        return new AppKernel('test', true);
+        if (isset($options['extra_parameters'])) {
+            return new AppKernel('test', true, $options['extra_parameters']);
+        }
+
+        return new AppKernel('test', true, []);
+    }
+
+    protected static function createAuthenticatedClient()
+    {
+        if (null === static::$kernel) {
+            static::bootKernel();
+        }
+
+        $client = static::$kernel->getContainer()->get('test.client');
+
+        $client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
+        $response = $client->getResponse();
+        $body     = json_decode($client->getResponse()->getContent(), true);
+
+        if (!isset($body['token'])) {
+            throw new \LogicException('Unable to get a JWT Token through the "/login_check" route.');
+        }
+
+        $client->setServerParameter('HTTP_AUTHORIZATION', sprintf('Bearer %s', $body['token']));
+
+        return $client;
     }
 
     /**
