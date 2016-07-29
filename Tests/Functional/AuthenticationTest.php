@@ -39,9 +39,9 @@ class AuthenticationTest extends TestCase
         $this->client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => self::$authorizationHeader]);
 
         $response = $this->client->getResponse();
-        var_dump($response->getContent());
         $response = $this->client->getResponse();
         $body     = json_decode($response->getContent(), true);
+
         $this->assertTrue($body['success']);
     }
 }
