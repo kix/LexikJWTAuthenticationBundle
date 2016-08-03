@@ -21,6 +21,9 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  * @author Robin Chalas  <robin.chalas@gmail.com>
+ *
+ * @deprecated since 2.0, will be removed in 3.0. See
+ *             {@link JWTTokenAuthenticator} instead
  */
 class JWTListener implements ListenerInterface
 {
@@ -59,6 +62,8 @@ class JWTListener implements ListenerInterface
         AuthenticationManagerInterface $authenticationManager,
         array $config = []
     ) {
+        @trigger_error(sprintf('The "%s" class is deprecated since version 2.0 and will be removed in 4.0. See "%s" instead.', JWTListener::class, JWTTokenAuthenticator::class), E_USER_DEPRECATED);
+
         $this->tokenStorage          = $tokenStorage;
         $this->authenticationManager = $authenticationManager;
         $this->config                = array_merge(['throw_exceptions' => false], $config);

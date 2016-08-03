@@ -1,0 +1,6 @@
+build:
+    tests:
+        override:
+            -
+                command: vendor/bin/phpunit --coverage-clover=coverage --exclude-group legacy
+                on_node: 1

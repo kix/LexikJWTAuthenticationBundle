@@ -17,6 +17,9 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  * JWTProvider.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
+ *
+ * @deprecated since 2.0, will be removed in 3.0. See
+ *             {@link JWTTokenAuthenticator} instead
  */
 class JWTProvider implements AuthenticationProviderInterface
 {
@@ -50,6 +53,8 @@ class JWTProvider implements AuthenticationProviderInterface
         JWTManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher
     ) {
+        @trigger_error(sprintf('The "%s" class is deprecated since version 2.0 and will be removed in 4.0. See "%s" instead.', JWTProvider::class, JWTTokenAuthenticator::class), E_USER_DEPRECATED);
+
         $this->userProvider      = $userProvider;
         $this->jwtManager        = $jwtManager;
         $this->dispatcher        = $dispatcher;
