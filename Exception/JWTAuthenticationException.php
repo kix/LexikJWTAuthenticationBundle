@@ -22,7 +22,7 @@ class JWTAuthenticationException extends AuthenticationException
      */
     public static function invalidToken(JWTDecodeFailureException $previous = null)
     {
-        return new static($previous ? $previous->getMessage() : 'Invalid JWT Token', 0, $previous);
+        return new self($previous ? $previous->getMessage() : 'Invalid JWT Token', 0, $previous);
     }
 
     /**
@@ -34,7 +34,7 @@ class JWTAuthenticationException extends AuthenticationException
      */
     public static function tokenNotFound($message = 'JWT Token not found')
     {
-        return new static($message);
+        return new self($message);
     }
 
     /**
@@ -50,7 +50,7 @@ class JWTAuthenticationException extends AuthenticationException
      */
     public static function invalidUser($identity, $identityField)
     {
-        return new static(
+        return new self(
             sprintf('Unable to load a valid user with "%s" "%s". If the user identity has been changed, you must renew the token. Otherwise, verify that the "lexik_jwt_authentication.user_identity_field" config option is correctly set.', $identityField, $identity)
         );
     }
@@ -66,6 +66,6 @@ class JWTAuthenticationException extends AuthenticationException
      */
     public static function invalidPayload($message = 'Invalid payload')
     {
-        return new static($message);
+        return new self($message);
     }
 }

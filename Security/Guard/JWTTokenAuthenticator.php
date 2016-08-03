@@ -27,8 +27,6 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 /**
  * JsonWebToken Authenticator (Symfony Guard implementation).
  *
- * Thanks @weaverryan for having shown us the way after introduced the component.
- *
  * @see http://knpuniversity.com/screencast/symfony-rest4/jwt-guard-authenticator
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>

@@ -3,14 +3,13 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
-use Symfony\Component\Security\Guard\Token\GuardTokenInterface;
 
 /**
  * JWTUserToken.
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
-class JWTUserToken extends AbstractToken implements GuardTokenInterface
+class JWTUserToken extends AbstractToken
 {
     /**
      * @var string
