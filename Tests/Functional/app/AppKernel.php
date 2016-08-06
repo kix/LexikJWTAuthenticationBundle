@@ -3,9 +3,6 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\Container;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\Component\HttpKernel\Kernel;
 
 /**
@@ -13,15 +10,6 @@ use Symfony\Component\HttpKernel\Kernel;
  */
 class AppKernel extends Kernel
 {
-    private $containerExtraParameters = [];
-
-    public function __construct($environment, $debug, $containerExtraParameters)
-    {
-        parent::__construct($environment, $debug);
-
-        $this->containerExtraParameters = $containerExtraParameters;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -45,7 +33,7 @@ class AppKernel extends Kernel
      */
     public function getCacheDir()
     {
-        return sys_get_temp_dir().'/LexikJWTAuthenticationBundle/';
+        return sys_get_temp_dir().'/LexikJWTAuthenticationBundle/cache';
     }
 
     /**
@@ -53,19 +41,7 @@ class AppKernel extends Kernel
      */
     public function getLogDir()
     {
-        return sys_get_temp_dir().'/LexikJWTAuthenticationBundle/';
-    }
-
-    /**
-     * Gets a new ContainerBuilder instance used to build the service container.
-     *
-     * @return ContainerBuilder
-     */
-    protected function getContainerBuilder()
-    {
-        $container = new ContainerBuilder(new ParameterBag(array_merge($this->containerExtraParameters, $this->getKernelParameters())));
-
-        return $container;
+        return sys_get_temp_dir().'/LexikJWTAuthenticationBundle/logs';
     }
 
     /**

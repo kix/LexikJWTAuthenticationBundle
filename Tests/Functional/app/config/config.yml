@@ -44,3 +44,14 @@ security:
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
+services:
+    lexik_jwt_authentication.test.exp_aware_jwt_encoder.wrapper:
+        class: Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Utils\ExpAwareJWTEncoderWrapper
+        arguments: [ '@lexik_jwt_authentication.encoder.default' ]
+
+    lexik_jwt_authentication.test.jwt_event_subscriber:
+        class: Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\EventListener\JWTEventSubscriber
+        shared: true
+        tags:
+            - { name: kernel.event_subscriber }
