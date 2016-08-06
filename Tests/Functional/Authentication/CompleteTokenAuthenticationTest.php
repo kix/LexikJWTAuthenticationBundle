@@ -6,7 +6,8 @@ use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Tests the different behaviours of an authentication via JSON Web Token.
+ * Base class for classes testing the different cases of authentication via
+ * JSON Web Token.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
@@ -31,11 +32,10 @@ class CompleteTokenAuthenticationTest extends TestCase
         static::$client->request('GET', '/api/secured');
 
         $response = static::$client->getResponse();
+
         $this->assertFailure($response);
 
-        $body = json_decode($response->getContent(), true);
-
-        return $body;
+        return json_decode($response->getContent(), true);
     }
 
     public function testAccessSecuredRouteWithInvalidToken()
@@ -44,11 +44,10 @@ class CompleteTokenAuthenticationTest extends TestCase
         static::$client->request('GET', '/api/secured', [], [], ['HTTP_AUTHORIZATION' => 'Bearer dummy']);
 
         $response = static::$client->getResponse();
-        $body     = json_decode($response->getContent(), true);
 
         $this->assertFailure($response);
 
-        return $body;
+        return json_decode($response->getContent(), true);
     }
 
     /**
@@ -65,11 +64,10 @@ class CompleteTokenAuthenticationTest extends TestCase
         static::$client->request('GET', '/api/secured');
 
         $response = static::$client->getResponse();
-        $body     = json_decode($response->getContent(), true);
 
         $this->assertFailure($response);
 
-        return $body;
+        return json_decode($response->getContent(), true);
     }
 
     protected function assertFailure(Response $response)
