@@ -5,6 +5,8 @@ For a diff between two versions https://github.com/lexik/LexikJWTAuthenticationB
 
 ## [2.0](https://github.com/lexik/LexikJWTAuthenticationBundle/tree/2.0)
 
+* feature [\#184](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/184) [Security] Depreciate current system in favor of a JWTTokenAuthenticator (Guard) ([chalasr](https://github.com/chalasr))
+
 * feature [\#218](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/218) Add more flexibility in token extractors configuration ([chalasr](https://github.com/chalasr))
 
 * feature [\#217](https://github.com/lexik/LexikJWTAuthenticationBundle/pull/217) Refactor TokenExtractors loading for easy overriding ([chalasr](https://github.com/chalasr))
