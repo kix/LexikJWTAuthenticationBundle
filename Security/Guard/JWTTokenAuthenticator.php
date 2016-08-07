@@ -58,18 +58,23 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      * @param JWTEncoderInterface      $jwtManager
      * @param EventDispatcherInterface $dispatcher
      * @param TokenExtractorInterface  $tokenExtractor
-     * @param string                   $userIdentityField
+     * @param string|null              $userIdentityField
      */
     public function __construct(
         JWTManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher,
         TokenExtractorInterface $tokenExtractor,
-        $userIdentityField
+        $userIdentityField = null
     ) {
-        $this->jwtManager        = $jwtManager;
-        $this->dispatcher        = $dispatcher;
-        $this->tokenExtractor    = $tokenExtractor;
-        $this->userIdentityField = $userIdentityField;
+        $this->jwtManager     = $jwtManager;
+        $this->dispatcher     = $dispatcher;
+        $this->tokenExtractor = $tokenExtractor;
+
+        if ($userIdentityField) {
+            $jwtManager->setUserIdentityField($userIdentityField);
+        }
+
+        $this->userIdentityField = $jwtManager->getUserIdentityField();
     }
 
     /**
