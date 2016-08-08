@@ -50,9 +50,7 @@ class JWTAuthenticationException extends AuthenticationException
      */
     public static function invalidUser($identity, $identityField)
     {
-        return new self(
-            sprintf('Unable to load a valid user with "%s" "%s". If the user identity has been changed, you must renew the token. Otherwise, verify that the "lexik_jwt_authentication.user_identity_field" config option is correctly set.', $identityField, $identity)
-        );
+        return new self(sprintf('Unable to load a valid user with property "%s" = "%s". If the user identity has been changed, you must renew the token. Otherwise, verify that the "lexik_jwt_authentication.user_identity_field" config option is correctly set.', $identityField, $identity));
     }
 
     /**

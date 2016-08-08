@@ -3,15 +3,14 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token;
 
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Guard\Token\PreAuthenticationGuardToken;
 
 /**
- * BeforeAuthToken.
- *
- * To be used before loading an user from a decoded JWT token.
+ * PreAuthenticationJWTUserToken.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-final class BeforeAuthToken extends AbstractToken
+final class PreAuthenticationJWTUserToken extends PreAuthenticationGuardToken
 {
     /**
      * @var string
@@ -29,8 +28,6 @@ final class BeforeAuthToken extends AbstractToken
     public function __construct($rawToken)
     {
         $this->rawToken = $rawToken;
-
-        $this->setAuthenticated(false);
     }
 
     /**

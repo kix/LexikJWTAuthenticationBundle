@@ -8,6 +8,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * JWTManagerInterface.
  *
+ * @deprecated since 2.0, removed in 3.0. Use {@link AuthenticatableJWTManagerInterface} instead
+ *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */
 interface JWTManagerInterface
@@ -15,14 +17,14 @@ interface JWTManagerInterface
     /**
      * @param UserInterface $user
      *
-     * @return string
+     * @return string The JWT token
      */
     public function create(UserInterface $user);
 
     /**
      * @param TokenInterface $token
      *
-     * @return bool|array
+     * @return array|false The JWT token payload or false if an error occurs
      */
     public function decode(TokenInterface $token);
 }

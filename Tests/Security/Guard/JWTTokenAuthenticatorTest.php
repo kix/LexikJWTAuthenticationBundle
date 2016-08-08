@@ -8,10 +8,10 @@ use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTAuthenticationException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
-use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\BeforeAuthToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\AuthenticatableJWTManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as AdvancedUserStub;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -39,7 +39,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
             $userIdentityField
         );
 
-        $this->assertInstanceOf(BeforeAuthToken::class, $authenticator->getCredentials($this->getRequestMock()));
+        $this->assertInstanceOf(PreAuthenticationJWTUserToken::class, $authenticator->getCredentials($this->getRequestMock()));
     }
 
     /**
@@ -87,7 +87,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
             ->method('dispatch')
             ->with(Events::JWT_AUTHENTICATED, new JWTAuthenticatedEvent($payload, $jwtUserToken));
 
-        $decodedToken = new BeforeAuthToken($rawToken);
+        $decodedToken = new PreAuthenticationJWTUserToken($rawToken);
         $decodedToken->setPayload($payload);
 
         $userProvider = $this->getUserProviderMock();
@@ -98,7 +98,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
             ->willReturn($userStub);
 
         $authenticator = new JWTTokenAuthenticator(
-            $this->getJWTManagerMock(),
+            $this->getJWTManagerMock('username'),
             $dispatcher,
             $this->getTokenExtractorMock(),
             $userIdentityField
@@ -113,11 +113,11 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetUserWithInvalidPayload()
     {
-        $decodedToken = new BeforeAuthToken('rawToken');
+        $decodedToken = new PreAuthenticationJWTUserToken('rawToken');
         $decodedToken->setPayload([]); // Empty payload
 
         (new JWTTokenAuthenticator(
-            $this->getJWTManagerMock(),
+            $this->getJWTManagerMock('username'),
             $this->getEventDispatcherMock(),
             $this->getTokenExtractorMock(),
             'username'
@@ -126,14 +126,14 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException        \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTAuthenticationException
-     * @expectedExceptionMessage Unable to load a valid user with "username" "lexik"
+     * @expectedExceptionMessage Unable to load a valid user with property "username" = "lexik"
      */
     public function testGetUserWithInvalidUser()
     {
         $userIdentityField = 'username';
         $payload           = [$userIdentityField => 'lexik'];
 
-        $decodedToken = new BeforeAuthToken('rawToken');
+        $decodedToken = new PreAuthenticationJWTUserToken('rawToken');
         $decodedToken->setPayload($payload);
 
         $userProvider = $this->getUserProviderMock();
@@ -143,8 +143,14 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
             ->with($payload[$userIdentityField])
             ->will($this->throwException(new UsernameNotFoundException()));
 
+        $jwtManager = $this->getJWTManagerMock();
+        $jwtManager
+            ->expects($this->once())
+            ->method('getUserIdentityField')
+            ->willReturn($userIdentityField);
+
         (new JWTTokenAuthenticator(
-            $this->getJWTManagerMock(),
+            $jwtManager,
             $this->getEventDispatcherMock(),
             $this->getTokenExtractorMock(),
             $userIdentityField
@@ -169,8 +175,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $authenticator = new JWTTokenAuthenticator(
             $this->getJWTManagerMock(),
             $dispatcher,
-            $this->getTokenExtractorMock(),
-            'username'
+            $this->getTokenExtractorMock()
         );
 
         $response = $authenticator->onAuthenticationFailure($this->getRequestMock(), $authException);
@@ -188,8 +193,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $authenticator = new JWTTokenAuthenticator(
             $this->getJWTManagerMock(),
             $this->getEventDispatcherMock(),
-            $this->getTokenExtractorMock(),
-            'username'
+            $this->getTokenExtractorMock()
         );
 
         $response = $authenticator->onAuthenticationFailure($this->getRequestMock(), $authException, $event);
@@ -215,8 +219,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $authenticator = new JWTTokenAuthenticator(
             $this->getJWTManagerMock(),
             $dispatcher,
-            $this->getTokenExtractorMock(),
-            'username'
+            $this->getTokenExtractorMock()
         );
 
         $response = $authenticator->start($this->getRequestMock(), $authException);
@@ -225,11 +228,25 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($failureResponse->getMessage(), $response->getMessage());
     }
 
-    private function getJWTManagerMock()
+    private function getJWTManagerMock($userIdentityField = null)
     {
-        return $this->getMockBuilder(JWTManagerInterface::class)
+        $jwtManager = $this->getMockBuilder(AuthenticatableJWTManagerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
+
+        if (null !== $userIdentityField) {
+            $jwtManager
+                ->expects($this->once())
+                ->method('setUserIdentityField')
+                ->with($userIdentityField);
+
+            $jwtManager
+                ->expects($this->once())
+                ->method('getUserIdentityField')
+                ->willReturn($userIdentityField);
+        }
+
+        return $jwtManager;
     }
 
     private function getEventDispatcherMock()
