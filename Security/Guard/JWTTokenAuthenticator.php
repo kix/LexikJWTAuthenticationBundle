@@ -13,7 +13,6 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\AuthenticatableJWTManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +51,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     /**
      * @param AuthenticatableJWTManagerInterface $jwtManager
      * @param EventDispatcherInterface           $dispatcher
-     * @param TokenExtractorInterface            $tokenExtractor         
+     * @param TokenExtractorInterface            $tokenExtractor
      * @param string|null                        $customUserIdentityField Overrides the configured user_identity_field
      */
     public function __construct(

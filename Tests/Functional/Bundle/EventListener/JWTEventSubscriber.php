@@ -5,6 +5,7 @@ namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Bundle\EventList
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
+use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class JWTEventSubscriber implements EventSubscriberInterface
@@ -35,11 +36,19 @@ class JWTEventSubscriber implements EventSubscriberInterface
 
     public function onJWTInvalid(JWTInvalidEvent $event)
     {
-        $event->getResponse()->setMessage('Custom JWT invalid message');
+        $response = $event->getResponse();
+
+        if ($response instanceof JWTAuthenticationFailureResponse) {
+            $response->setMessage('Custom JWT invalid message');
+        }
     }
 
     public function onJWTNotFound(JWTNotFoundEvent $event)
     {
-        $event->getResponse()->setMessage('Custom JWT not found message');
+        $response = $event->getResponse();
+
+        if ($response instanceof JWTAuthenticationFailureResponse) {
+            $response->setMessage('Custom JWT not found message');
+        }
     }
 }

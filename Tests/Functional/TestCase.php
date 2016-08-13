@@ -20,7 +20,7 @@ abstract class TestCase extends WebTestCase
     {
         require_once __DIR__.'/app/AppKernel.php';
 
-        return new AppKernel('test', true, []);
+        return new AppKernel('test', true);
     }
 
     protected static function createAuthenticatedClient($token = null)
@@ -41,23 +41,18 @@ abstract class TestCase extends WebTestCase
         return $client;
     }
 
-    protected static function getAuthenticatedToken(Client $client = null)
+    protected static function getAuthenticatedToken()
     {
-        if (null === $client && null !== static::$client) {
-            $client = static::$client;
-        } elseif (null === $client && null === static::$client) {
-            throw new \LogicException(sprintf('Method "%s()" expects a "%s" instance as first argument, "%s" given. Instead of passing the client as argument, you can define static::$client.', __METHOD__, Client::class));
-        }
+        $client = static::$client ?: static::$kernel->getContainer()->get('test.client');
 
         $client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
-        $response = $client->getResponse();
-        $body     = json_decode($client->getResponse()->getContent(), true);
+        $responseBody     = json_decode($client->getResponse()->getContent(), true);
 
-        if (!isset($body['token'])) {
+        if (!isset($responseBody['token'])) {
             throw new \LogicException('Unable to get a JWT Token through the "/login_check" route.');
         }
 
-        return $body['token'];
+        return $responseBody['token'];
     }
 
     /**

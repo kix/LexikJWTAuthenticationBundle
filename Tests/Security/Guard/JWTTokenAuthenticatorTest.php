@@ -159,7 +159,6 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
     public function testOnAuthenticationFailureWithoutEventArg()
     {
-        $request          = $this->getRequestMock();
         $authException    = new JWTAuthenticationException('Invalid JWT Token');
         $expectedResponse = new JWTAuthenticationFailureResponse('Invalid JWT Token');
 
