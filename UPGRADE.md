@@ -149,7 +149,7 @@ Command
 Security
 --------
 
-* The `JWTManagerInterface` has been deprecated in favor of a new `AuthenticatableJWTManagerInterface` 
+* The `JWTManagerInterface` has been deprecated in favor of a new `JWTTokenManagerInterface` 
   implementing two new methods: `setUserIdentityField` and `getUserIdentityField`.
   These methods were already implemented by the JWTManager class in 1.x but not guaranteed
   by the old interface.

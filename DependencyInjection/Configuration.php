@@ -69,56 +69,6 @@ class Configuration implements ConfigurationInterface
         return $treeBuilder;
     }
 
-    private function getTokenExtractorsNode()
-    {
-        $builder = new TreeBuilder();
-        $node    = $builder->root('token_extractors');
-
-        $node
-            ->addDefaultsIfNotSet()
-            ->children()
-                ->arrayNode('authorization_header')
-                ->addDefaultsIfNotSet()
-                    ->children()
-                        ->booleanNode('enabled')
-                            ->defaultTrue()
-                        ->end()
-                        ->scalarNode('prefix')
-                            ->defaultValue('Bearer')
-                        ->end()
-                        ->scalarNode('name')
-                            ->defaultValue('Authorization')
-                        ->end()
-                    ->end()
-                ->end()
-                ->arrayNode('cookie')
-                ->addDefaultsIfNotSet()
-                    ->children()
-                        ->booleanNode('enabled')
-                            ->defaultFalse()
-                        ->end()
-                        ->scalarNode('name')
-                            ->defaultValue('BEARER')
-                        ->end()
-                    ->end()
-                ->end()
-                ->arrayNode('query_parameter')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->booleanNode('enabled')
-                            ->defaultFalse()
-                        ->end()
-                        ->scalarNode('name')
-                            ->defaultValue('bearer')
-                        ->end()
-                    ->end()
-                ->end()
-                ->append($this->getTokenExtractorsNode())
-            ->end();
-
-        return $node;
-    }
-
     /**
      * @return TreeBuilder
      */

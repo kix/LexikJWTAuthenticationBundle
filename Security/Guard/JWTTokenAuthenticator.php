@@ -50,8 +50,8 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
     /**
      * @param JWTTokenManagerInterface $jwtManager
-     * @param EventDispatcherInterface           $dispatcher
-     * @param TokenExtractorInterface            $tokenExtractor
+     * @param EventDispatcherInterface $dispatcher
+     * @param TokenExtractorInterface  $tokenExtractor
      */
     public function __construct(
         JWTTokenManagerInterface $jwtManager,
@@ -133,7 +133,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     /**
      * {@inheritdoc}
      *
-     * @param JWTFailureEventInterface An event to be dispatched (default JWTInvalidEvent)
+     * @param JWTFailureEventInterface $event An event to be dispatched (default JWTInvalidEvent)
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $authException, JWTFailureEventInterface $event = null)
     {
