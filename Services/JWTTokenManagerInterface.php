@@ -6,12 +6,12 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * AuthenticatableJWTManagerInterface must be implemented by classes able to create/decode
- * authenticatable JWT tokens.
+ * JWTTokenManagerInterface must be implemented by classes able to create/decode
+ * JWT tokens.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-interface AuthenticatableJWTManagerInterface
+interface JWTTokenManagerInterface
 {
     /**
      * @param UserInterface $user

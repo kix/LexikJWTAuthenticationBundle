@@ -8,7 +8,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * JWTManagerInterface.
  *
- * @deprecated since 2.0, removed in 3.0. Use {@link AuthenticatableJWTManagerInterface} instead
+ * @deprecated since 2.0, removed in 3.0. Use {@link JWTTokenManagerInterface} instead
  *
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  */

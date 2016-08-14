@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @author Nicolas Cabot <n.cabot@lexik.fr>
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class JWTManager implements JWTManagerInterface, AuthenticatableJWTManagerInterface
+class JWTManager implements JWTManagerInterface, JWTTokenManagerInterface
 {
     /**
      * @var JWTEncoderInterface

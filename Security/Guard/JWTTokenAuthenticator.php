@@ -12,7 +12,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureResponse;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\AuthenticatableJWTManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +34,7 @@ use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 {
     /**
-     * @var AuthenticatableJWTManagerInterface
+     * @var JWTTokenManagerInterface
      */
     private $jwtManager;
 
@@ -49,21 +49,15 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     private $tokenExtractor;
 
     /**
-     * @param AuthenticatableJWTManagerInterface $jwtManager
+     * @param JWTTokenManagerInterface $jwtManager
      * @param EventDispatcherInterface           $dispatcher
      * @param TokenExtractorInterface            $tokenExtractor
-     * @param string|null                        $customUserIdentityField Overrides the configured user_identity_field
      */
     public function __construct(
-        AuthenticatableJWTManagerInterface $jwtManager,
+        JWTTokenManagerInterface $jwtManager,
         EventDispatcherInterface $dispatcher,
-        TokenExtractorInterface $tokenExtractor,
-        $customUserIdentityField = null
+        TokenExtractorInterface $tokenExtractor
     ) {
-        if (!empty($customUserIdentityField)) {
-            $jwtManager->setUserIdentityField($customUserIdentityField);
-        }
-
         $this->jwtManager     = $jwtManager;
         $this->dispatcher     = $dispatcher;
         $this->tokenExtractor = $tokenExtractor;

@@ -11,7 +11,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationFailureRespon
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\JWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\Guard\JWTTokenAuthenticator;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\AuthenticatableJWTManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Tests\Stubs\User as AdvancedUserStub;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\TokenExtractorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -51,8 +51,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         (new JWTTokenAuthenticator(
             $this->getJWTManagerMock(),
             $this->getEventDispatcherMock(),
-            $this->getTokenExtractorMock('token'),
-            'username'
+            $this->getTokenExtractorMock('token')
         ))->getCredentials($this->getRequestMock());
     }
 
@@ -61,8 +60,7 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
         $authenticator = new JWTTokenAuthenticator(
             $this->getJWTManagerMock(),
             $this->getEventDispatcherMock(),
-            $this->getTokenExtractorMock(false),
-            'username'
+            $this->getTokenExtractorMock(false)
         );
 
         $this->assertNull($authenticator->getCredentials($this->getRequestMock()));
@@ -229,16 +227,11 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
 
     private function getJWTManagerMock($userIdentityField = null)
     {
-        $jwtManager = $this->getMockBuilder(AuthenticatableJWTManagerInterface::class)
+        $jwtManager = $this->getMockBuilder(JWTTokenManagerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
         if (null !== $userIdentityField) {
-            $jwtManager
-                ->expects($this->once())
-                ->method('setUserIdentityField')
-                ->with($userIdentityField);
-
             $jwtManager
                 ->expects($this->once())
                 ->method('getUserIdentityField')
