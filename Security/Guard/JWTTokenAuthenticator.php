@@ -104,6 +104,12 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      */
     public function getUser($preAuthToken, UserProviderInterface $userProvider)
     {
+        if (!$preAuthToken instanceof PreAuthenticationJWTUserToken) {
+            throw new \InvalidArgumentException(
+                sprintf('The first argument of the "%s()" method must be an instance of "%s".', __METHOD__, PreAuthenticationJWTUserToken::class)
+            );
+        }
+
         $payload       = $preAuthToken->getPayload();
         $identityField = $this->jwtManager->getUserIdentityField();
 

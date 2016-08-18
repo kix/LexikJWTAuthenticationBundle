@@ -123,6 +123,19 @@ class JWTTokenAuthenticatorTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @expectedException        \InvalidArgumentException
+     * @expectedExceptionMessage must be an instance of "Lexik\Bundle\JWTAuthenticationBundle\Security\Authentication\Token\PreAuthenticationJWTUserToken".
+     */
+    public function testGetUserWithInvalidFirstArg()
+    {
+        (new JWTTokenAuthenticator(
+            $this->getJWTManagerMock(),
+            $this->getEventDispatcherMock(),
+            $this->getTokenExtractorMock()
+        ))->getUser(new \stdClass(), $this->getUserProviderMock());
+    }
+
+    /**
      * @expectedException        \Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTAuthenticationException
      * @expectedExceptionMessage Unable to load a valid user with property "username" = "lexik"
      */
