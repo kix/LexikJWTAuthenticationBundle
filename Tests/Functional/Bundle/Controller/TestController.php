@@ -14,6 +14,6 @@ class TestController extends Controller
 
     public function loginCheckAction()
     {
-        throw new \RuntimeException('loginCheckAction should never be called');
+        throw new \RuntimeException('loginCheckAction() should never be called directly.');
     }
 }

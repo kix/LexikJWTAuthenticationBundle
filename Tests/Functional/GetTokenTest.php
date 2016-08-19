@@ -2,11 +2,13 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Lexik\Bundle\JWTAuthenticationBundle\Response\JWTAuthenticationSuccessResponse;
 
 class GetTokenTest extends TestCase
 {
-    public function __construct()
+    public static function setupBeforeClass()
     {
         static::$client = static::createClient();
     }
@@ -23,6 +25,25 @@ class GetTokenTest extends TestCase
         $body = json_decode($response->getContent(), true);
 
         $this->assertArrayHasKey('token', $body, 'The response should have a "token" key containing a JWT Token.');
+    }
+
+    public function testGetTokenWithCustomClaim()
+    {
+        static::bootKernel();
+
+        $subscriber = static::$kernel->getContainer()->get('lexik_jwt_authentication.test.jwt_event_subscriber');
+        $subscriber->setListener(Events::JWT_CREATED, function (JWTCreatedEvent $e) {
+            $e->setData($e->getData() + ['custom' => 'dummy']);
+        });
+
+        static::$client->request('POST', '/login_check', ['_username' => 'lexik', '_password' => 'dummy']);
+
+        $body    = json_decode(static::$client->getResponse()->getContent(), true);
+        $decoder = static::$kernel->getContainer()->get('lexik_jwt_authentication.encoder.default');
+        $payload = $decoder->decode($body['token']);
+
+        $this->assertArrayHasKey('custom', $payload, 'The payload should contains a "custom" claim.');
+        $this->assertSame('dummy', $payload['custom'], 'The "custom" claim should be equal to "dummy".');
     }
 
     public function testGetTokenFromInvalidCredentials()

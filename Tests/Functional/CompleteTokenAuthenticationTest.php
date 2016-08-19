@@ -1,8 +1,7 @@
 <?php
 
-namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Authentication;
+namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional;
 
-use Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\TestCase;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
