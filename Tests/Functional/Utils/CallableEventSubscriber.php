@@ -2,19 +2,19 @@
 
 namespace Lexik\Bundle\JWTAuthenticationBundle\Tests\Functional\Utils;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTDecodedEvent;
-use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTEncodedEvent;
+use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
-use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class CallableEventSubscriber implements EventSubscriberInterface
 {
-    private static $listeners = [];
+    private static $listeners     = [];
     private static $eventClassMap = [
         Events::JWT_CREATED       => JWTCreatedEvent::class,
         Events::JWT_DECODED       => JWTDecodedEvent::class,

@@ -3,7 +3,6 @@
 namespace Lexik\Bundle\JWTAuthenticationBundle\Security\Guard;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTAuthenticatedEvent;
-use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTFailureEventInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTInvalidEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTNotFoundEvent;
 use Lexik\Bundle\JWTAuthenticationBundle\Events;
@@ -138,15 +137,11 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
     /**
      * {@inheritdoc}
-     *
-     * @param JWTFailureEventInterface $event An event to be dispatched (default JWTInvalidEvent)
      */
-    public function onAuthenticationFailure(Request $request, AuthenticationException $authException, JWTFailureEventInterface $event = null)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $authException)
     {
-        if (null === $event) {
-            $event = new JWTInvalidEvent($authException, new JWTAuthenticationFailureResponse($authException->getMessage()));
-            $this->dispatcher->dispatch(Events::JWT_INVALID, $event);
-        }
+        $event = new JWTInvalidEvent($authException, new JWTAuthenticationFailureResponse($authException->getMessage()));
+        $this->dispatcher->dispatch(Events::JWT_INVALID, $event);
 
         return $event->getResponse();
     }
@@ -171,7 +166,7 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
         $this->dispatcher->dispatch(Events::JWT_NOT_FOUND, $event);
 
-        return $this->onAuthenticationFailure($request, $authException, $event);
+        return $event->getResponse();
     }
 
     /**
